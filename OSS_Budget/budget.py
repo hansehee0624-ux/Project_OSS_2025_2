@@ -25,7 +25,6 @@ class Budget:
         print(f"총 지출: {total}원\n")
 
     def list_expenses_by_date(self, start_date_str, end_date_str):
-        """특정 날짜 범위 (start_date_str ~ end_date_str) 내의 지출 내역을 조회합니다."""
         if not self.expenses:
             print("지출 내역이 없습니다.\n")
             return
@@ -40,13 +39,12 @@ class Budget:
         if start_date > end_date:
             print("🚨 시작 날짜가 종료 날짜보다 늦을 수 없습니다.")
             return
-       # 범위 내의 지출만 필터링     
+
         filtered_expenses = []
         for e in self.expenses:
             expense_date = datetime.date.fromisoformat(e.date)
             if start_date <= expense_date <= end_date:
                 filtered_expenses.append(e)
-                
                 
         if not filtered_expenses:
             print(f"\n기간 ({start_date_str} ~ {end_date_str}) 내에 지출 내역이 없습니다.\n")
@@ -54,5 +52,27 @@ class Budget:
 
         print(f"\n[기간별 지출 목록: {start_date_str} ~ {end_date_str}]")
         for idx, e in enumerate(filtered_expenses, 1):
+            print(f"{idx}. {e}")
+        print()
+
+    # 추가된 기능: 특정 검색어 포함한 지출을 출력!
+    def search_expense(self, keyword):
+        """카테고리 또는 설명에 검색어가 포함된 지출을 출력"""
+        keyword = keyword.strip()
+        if not keyword:
+            print("❌ 검색어를 입력해주세요.\n")
+            return
+
+        results = [
+            e for e in self.expenses
+            if keyword in e.category or keyword in e.description
+        ]
+
+        if not results:
+            print("\n검색 결과가 없습니다.\n")
+            return
+
+        print("\n[검색 결과]")
+        for idx, e in enumerate(results, 1):
             print(f"{idx}. {e}")
         print()
